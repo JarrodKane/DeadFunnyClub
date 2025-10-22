@@ -2,11 +2,19 @@ import { IconType } from '../types';
 
 export const LINKS = [
   {
+    name: 'Comedy at Hopheads',
+    url: 'https://hopheadscomedy.eventbrite.com.au',
+    icon: IconType.Tickets,
+    location: '53 Anderson St, Yarraville VIC 3013',
+    time: '7:30pm - Weekly on Mondays',
+    price: 'Free'
+  },
+  {
     name: 'Bar Humbug Comedy',
     url: 'https://barhumbugcomedy.eventbrite.com.au',
     icon: IconType.Tickets,
     location: '586 Little Bourke St, Melbourne VIC 3000',
-    time: 'Weekly on Wednesdays',
+    time: '7:30pm - Weekly on Wednesdays',
     price: 'Free'
   },
   {
@@ -14,7 +22,7 @@ export const LINKS = [
     url: 'https://Thepennyblack.eventbrite.com.au',
     icon: IconType.Tickets,
     location: '420 Sydney Rd, Brunswick VIC 3056',
-    time: 'First Thursday of each month',
+    time: '7:30pm - First Thursday of each month',
     price: 'Free'
   },
   {
@@ -22,7 +30,7 @@ export const LINKS = [
     url: 'https://creaturecomedy.eventbrite.com.au',
     icon: IconType.Tickets,
     location: '140 Lygon St, Brunswick East VIC 3057',
-    time: 'Second Thursday of each month',
+    time: '8pm - Second Thursday of each month',
     price: 'Free'
   },
 ]
