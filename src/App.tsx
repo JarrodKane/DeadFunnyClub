@@ -22,14 +22,14 @@ function App() {
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-white" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Comics</h1>
         <a
-          href="https://whatsapp.com/channel/0029Vb6lyKxLNSa3KCbjXE0g"
+          href="https://forms.gle/FckwGnEKAADxzFT86"
           target="_blank"
           rel="noopener noreferrer"
           className="w-full px-4 sm:px-0"
         >
           <div className="flex items-center justify-center gap-3 bg-green-700 text-white py-4 rounded-lg font-bold hover:bg-green-900 transition-all shadow-lg border">
             <span className="text-2xl">💬</span>
-            <span>WhatsApp Channel for getting a spot</span>
+            <span>EOI form for Dead Funny Club rooms</span>
           </div>
         </a>
         <a
