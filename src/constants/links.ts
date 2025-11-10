@@ -6,7 +6,7 @@ export const LINKS = [
     url: 'https://hopheadscomedy.eventbrite.com.au',
     icon: IconType.Tickets,
     location: '53 Anderson St, Yarraville VIC 3013',
-    time: '7:30pm - Weekly on Mondays',
+    time: '7:00pm - Fortnightly on Mondays',
     price: 'Free'
   },
   {
