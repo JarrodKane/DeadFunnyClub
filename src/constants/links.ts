@@ -2,14 +2,6 @@ import { IconType } from '../types';
 
 export const LINKS = [
   {
-    name: 'Comedy at Hopheads',
-    url: 'https://hopheadscomedy.eventbrite.com.au',
-    icon: IconType.Tickets,
-    location: '53 Anderson St, Yarraville VIC 3013',
-    time: '7:00pm - Fortnightly on Mondays',
-    price: 'Free'
-  },
-  {
     name: 'Bar Humbug Comedy',
     url: 'https://barhumbugcomedy.eventbrite.com.au',
     icon: IconType.Tickets,
