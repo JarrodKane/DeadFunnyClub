@@ -2,19 +2,19 @@ import { IconType } from '../types';
 
 export const LINKS = [
   {
+    name: 'Dead Funny Underground',
+    url: 'https://dfunderground.eventbrite.com.au',
+    icon: IconType.Tickets,
+    location: '313 Flinders Ln, Melbourne VIC 3000',
+    time: '8pm - Weekly on Tuesday',
+    price: 'Free *Limited time*'
+  },
+  {
     name: 'Bar Humbug Comedy',
     url: 'https://barhumbugcomedy.eventbrite.com.au',
     icon: IconType.Tickets,
     location: '586 Little Bourke St, Melbourne VIC 3000',
     time: '7:30pm - Weekly on Wednesdays',
-    price: 'Free'
-  },
-  {
-    name: 'The Penny Black Comedy',
-    url: 'https://Thepennyblack.eventbrite.com.au',
-    icon: IconType.Tickets,
-    location: '420 Sydney Rd, Brunswick VIC 3056',
-    time: '7:30pm - First Thursday of each month',
     price: 'Free'
   },
   {
