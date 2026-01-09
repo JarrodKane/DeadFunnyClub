@@ -22,17 +22,6 @@ function App() {
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-white" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Comics</h1>
         <a
-          href="https://forms.gle/FckwGnEKAADxzFT86"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full px-4 sm:px-0"
-        >
-          <div className="flex items-center justify-center gap-3 bg-green-700 text-white py-4 rounded-lg font-bold hover:bg-green-900 transition-all shadow-lg border">
-            <span className="text-2xl">💬</span>
-            <span>EOI form for Dead Funny Club rooms</span>
-          </div>
-        </a>
-        <a
           href="https://docs.google.com/spreadsheets/d/1MEXRL83oZ72PONC6k5yhqJb1EkGYADJ3TlMxkmDVaW8/edit?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
