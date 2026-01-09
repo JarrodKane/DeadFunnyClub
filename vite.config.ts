@@ -4,5 +4,5 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [tailwindcss(), react(),],
-  base: process.env.VITE_BASE_PATH || '/DeadFunnyClub'
+  base: process.env.NODE_ENV === 'production' ? '/DeadFunnyClub' : '/'
 })
