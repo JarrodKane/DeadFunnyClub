@@ -1,7 +1,9 @@
 import { createRouter, RouterProvider, createRootRoute, createRoute } from '@tanstack/react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Home } from './routes/home'
 import { Melbourne } from './routes/melbourne'
 
+const queryClient = new QueryClient();
 const rootRoute = createRootRoute()
 
 const indexRoute = createRoute({
@@ -30,7 +32,11 @@ declare module '@tanstack/react-router' {
 }
 
 function App() {
-  return <RouterProvider router={router} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  )
 }
 
 export default App
