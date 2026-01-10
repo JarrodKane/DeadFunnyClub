@@ -1,6 +1,4 @@
-interface ComedyEvent {
-  [key: string]: string;
-}
+import type { ComedyEvent } from '../types';
 
 const PUBLISHED_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT_ZzHGQ5ZhUcbI2aghCM4es_4YT5nDQtcBJnpEHkvtUAEb0BrvijEnNjoJZoCYtx62eTSTpyFNZuTB/pub?output=csv';
 
@@ -21,10 +19,6 @@ export async function fetchMelbourneComedy(): Promise<ComedyEvent[]> {
     return isValid;
   });
 
-  console.log('Total rows:', allData.length);
-  console.log('Valid rows:', validData.length);
-  console.log('Invalid rows:', invalidRows);
-
   return validData;
 }
 
@@ -37,11 +31,11 @@ function parseCSV(csv: string): ComedyEvent[] {
     .filter(line => line.trim())
     .map(line => {
       const values = parseCSVLine(line);
-      const obj: ComedyEvent = {};
+      const obj: Record<string, string> = {};
       headers.forEach((header, i) => {
         obj[header.trim()] = values[i]?.trim() || '';
       });
-      return obj;
+      return obj as unknown as ComedyEvent;
     });
 }
 

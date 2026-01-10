@@ -7,10 +7,10 @@ import { Header } from './components/header'
 const queryClient = new QueryClient();
 const rootRoute = createRootRoute({
   component: () => (
-    <>
+    <div className="min-h-screen bg-background text-foreground">
       <Header />
       <Outlet />
-    </>
+    </div>
   ),
 })
 
