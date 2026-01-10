@@ -31,7 +31,7 @@ const routeTree = rootRoute.addChildren([indexRoute, melbourneRoute])
 
 const router = createRouter({
   routeTree,
-  basepath: '/'
+  basepath: import.meta.env.BASE_URL
 })
 
 declare module '@tanstack/react-router' {
