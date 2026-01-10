@@ -1,3 +1,12 @@
+import {
+  Table as ShadTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+
 interface ComedyEvent {
   [key: string]: string;
 }
@@ -8,35 +17,39 @@ interface TableProps {
 
 export function Table({ data }: TableProps) {
   if (data.length === 0) {
-    return <p className="text-white">No data available</p>;
+    return <p className="text-muted-foreground">No data available</p>;
   }
 
-  const headers = Object.keys(data[0]);
+  console.log('First row:', data[0]);
+  console.log('Available keys:', Object.keys(data[0]));
+
+  const displayColumnTitle = Object.keys(data[0])
+
 
   return (
-    <div className="w-full overflow-x-auto">
-      <table className="w-full text-white border-collapse">
-        <thead>
-          <tr className="bg-green-900">
-            {headers.map(header => (
-              <th key={header} className="p-2 text-left border border-green-700">
+    <div className="w-full overflow-x-auto rounded-md border">
+      <ShadTable>
+        <TableHeader>
+          <TableRow>
+            {displayColumnTitle.map(header => (
+              <TableHead key={header} className="min-w-[150px]">
                 {header}
-              </th>
+              </TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data.map((row, i) => (
-            <tr key={i} className="border-b border-green-800 hover:bg-green-950">
-              {headers.map(header => (
-                <td key={header} className="p-2 border border-green-800">
-                  {row[header]}
-                </td>
+            <TableRow key={i}>
+              {displayColumnTitle.map(header => (
+                <TableCell key={header} className="max-w-[250px] whitespace-normal break-words">
+                  {row[header] || '—'}
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </ShadTable>
     </div>
   );
 }

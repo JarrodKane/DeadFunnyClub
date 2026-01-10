@@ -8,8 +8,26 @@ export async function fetchMelbourneComedy(): Promise<ComedyEvent[]> {
   const response = await fetch(PUBLISHED_CSV_URL);
   const csvText = await response.text();
 
-  return parseCSV(csvText);
+  const allData = parseCSV(csvText);
+
+  // Filter out invalid rows and log them
+  const invalidRows: ComedyEvent[] = [];
+  const validData = allData.filter((event, index) => {
+    const isValid = event.Name && event.Name.trim() !== '' && event.Name !== '???';
+    if (!isValid) {
+      console.log(`Invalid row ${index + 2}:`, event); // +2 because of header and 0-index
+      invalidRows.push(event);
+    }
+    return isValid;
+  });
+
+  console.log('Total rows:', allData.length);
+  console.log('Valid rows:', validData.length);
+  console.log('Invalid rows:', invalidRows);
+
+  return validData;
 }
+
 
 function parseCSV(csv: string): ComedyEvent[] {
   const lines = csv.split('\n');

@@ -1,10 +1,19 @@
-import { createRouter, RouterProvider, createRootRoute, createRoute } from '@tanstack/react-router'
+import { createRouter, RouterProvider, createRootRoute, Outlet, createRoute } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Home } from './routes/home'
 import { Melbourne } from './routes/melbourne'
+import { Header } from './components/header'
 
 const queryClient = new QueryClient();
-const rootRoute = createRootRoute()
+const rootRoute = createRootRoute({
+  component: () => (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  ),
+})
+
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,

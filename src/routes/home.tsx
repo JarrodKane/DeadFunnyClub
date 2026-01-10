@@ -4,11 +4,11 @@ import { LINKS } from '../constants'
 
 export function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-10 justify-center h-full bg-gradient-to-b from-green-950 to-black">
+    <main className="flex min-h-screen flex-col items-center p-10 justify-center h-full">
       <div className="flex flex-col gap-10 w-full items-center max-w-lg">
         {/* <img src="./dfc.png" className="w-90 h-90 rounded-full" /> */}
-        <h1 className="text-3xl sm:text-6xl font-bold text-white" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Dead Funny Club</h1>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Tickets and Shows</h1>
+        <h1 className="text-3xl sm:text-6xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Dead Funny Club</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Tickets and Shows</h1>
         <div className="flex flex-col gap-6 w-full px-4 sm:px-0">
           {LINKS.map(link => (
             <div key={link.url} className="flex flex-col gap-2">
@@ -21,9 +21,9 @@ export function Home() {
             </div>
           ))}
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-white" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Comics</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Comics</h1>
         <RouterLink to="/melbourne" className="w-full px-4 sm:px-0">
-          <div className="flex items-center justify-center gap-3 bg-blue-600 text-white py-4 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg border">
+          <div className="flex items-center justify-center gap-3 bg-primary text-primary-foreground py-4 rounded-lg font-bold hover:bg-primary/90 transition-all shadow-lg border border-border">
             <span className="text-2xl">📊</span>
             <span>Melbourne Comedy Standup Sheet</span>
           </div>
@@ -40,8 +40,8 @@ export function Home() {
         <div className="flex flex-col gap-6 w-full">
           {LINKS.map(link => (
             <div key={link.url} className="flex flex-col gap-2">
-              <details className="text-white">
-                <summary className="cursor-pointer text-sm font-semibold mb-2 hover:text-gray-300">
+              <details>
+                <summary className="cursor-pointer text-sm font-semibold mb-2 hover:text-muted-foreground">
                   ℹ️ {link.name} Details
                 </summary>
                 <div className="text-sm space-y-1 px-4 pb-2">
