@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [tailwindcss(), react(),],
-  base: process.env.NODE_ENV === 'production' ? '/DeadFunnyClub' : '/',
+  base: '/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
