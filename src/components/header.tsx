@@ -6,6 +6,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from './ui/navigation-menu';
+import { ThemeToggle } from './theme-toggle'
 
 export function Header() {
   return (
@@ -27,6 +28,10 @@ export function Header() {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <ThemeToggle />
+            </NavigationMenuItem>
+
           </NavigationMenuList>
         </NavigationMenu>
       </div>

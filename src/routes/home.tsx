@@ -23,7 +23,7 @@ export function Home() {
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>Comics</h1>
         <RouterLink to="/melbourne" className="w-full px-4 sm:px-0">
-          <div className="flex items-center justify-center gap-3 bg-primary text-primary-foreground py-4 rounded-lg font-bold hover:bg-primary/90 transition-all shadow-lg border border-border">
+          <div className="flex items-center justify-center gap-3 bg-primary text-foreground py-4 rounded-lg font-bold hover:bg-accent hover:text-accent-foreground transition-all shadow-lg border border-border">
             <span className="text-2xl">📊</span>
             <span>Melbourne Comedy Standup Sheet</span>
           </div>

@@ -1,8 +1,9 @@
-import { createRouter, RouterProvider, createRootRoute, Outlet, createRoute } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Home } from './routes/home'
-import { Melbourne } from './routes/melbourne'
-import { Header } from './components/header'
+import { createRootRoute, createRoute, createRouter, Outlet, RouterProvider } from '@tanstack/react-router';
+import { Header } from './components/header';
+import { ThemeProvider } from './components/theme-provider';
+import { Home } from './routes/home';
+import { Melbourne } from './routes/melbourne';
 
 const queryClient = new QueryClient();
 const rootRoute = createRootRoute({
@@ -42,9 +43,12 @@ declare module '@tanstack/react-router' {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="system" storageKey="dead-funny-club-theme">
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </ThemeProvider>
+
   )
 }
 

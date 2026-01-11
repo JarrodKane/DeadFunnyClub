@@ -24,7 +24,7 @@ export async function fetchMelbourneComedy(): Promise<ComedyEvent[]> {
 
 
 function parseCSV(csv: string): ComedyEvent[] {
-  const lines = csv.split('\n');
+  const lines = splitCSVLines(csv);
   const headers = parseCSVLine(lines[0]);
 
   return lines.slice(1)
@@ -37,6 +37,57 @@ function parseCSV(csv: string): ComedyEvent[] {
       });
       return obj as unknown as ComedyEvent;
     });
+}
+
+function splitCSVLines(csv: string): string[] {
+  const lines: string[] = [];
+  let currentLine = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < csv.length; i++) {
+    const char = csv[i];
+    const nextChar = csv[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote
+        currentLine += '""';
+        i++; // Skip next quote
+      } else {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+        currentLine += char;
+      }
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      // End of line (outside quotes)
+      if (currentLine.trim()) {
+        lines.push(currentLine);
+      }
+      currentLine = '';
+      // Skip \r\n combination
+      if (char === '\r' && nextChar === '\n') {
+        i++;
+      }
+    } else {
+      // Replace newlines inside quotes with space
+      if ((char === '\n' || char === '\r') && inQuotes) {
+        currentLine += ' ';
+        // Skip \r\n combination
+        if (char === '\r' && nextChar === '\n') {
+          i++;
+        }
+      } else {
+        currentLine += char;
+      }
+    }
+  }
+
+  // Push last line
+  if (currentLine.trim()) {
+    lines.push(currentLine);
+  }
+
+  return lines;
 }
 
 function parseCSVLine(line: string): string[] {
