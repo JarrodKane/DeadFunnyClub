@@ -36,6 +36,19 @@ export function Melbourne() {
           selectedTypes={selectedTypes}
           setSelectedTypes={setSelectedTypes}
         />
+        <footer className="mt-8 text-center text-sm text-muted-foreground">
+          <p>
+            All data imported from{' '}
+            <a
+              href="https://docs.google.com/spreadsheets/d/1MEXRL83oZ72PONC6k5yhqJb1EkGYADJ3TlMxkmDVaW8/edit?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Melbourne Standup Sheet
+            </a>
+          </p>
+        </footer>
       </div>
     </main>
   )
