@@ -15,6 +15,7 @@ import { useState } from "react";
 import { type ComedyEvent } from '../types';
 import { Columns } from './columns';
 import { DaysSelect } from './days-select';
+import { FilterModal } from './filter-modal';
 import { FrequencyCheckbox } from './frequency-checkbox';
 import { TypeCheckbox } from './type-checkbox';
 import { Button } from "./ui/button";
@@ -36,9 +37,23 @@ import {
 
 interface TableProps {
   data: ComedyEvent[];
+  selectedDays: string[];
+  setSelectedDays: (days: string[]) => void;
+  selectedFrequencies: string[];
+  setSelectedFrequencies: (frequencies: string[]) => void;
+  selectedTypes: string[];
+  setSelectedTypes: (types: string[]) => void;
 }
 
-export function Table({ data }: TableProps) {
+export function Table({
+  data,
+  selectedDays,
+  setSelectedDays,
+  selectedFrequencies,
+  setSelectedFrequencies,
+  selectedTypes,
+  setSelectedTypes
+}: TableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnSizing, setColumnSizing] = useState({});
@@ -79,7 +94,11 @@ export function Table({ data }: TableProps) {
             }
             className="flex-1 min-w-[150px] sm:max-w-sm"
           />
-          <DaysSelect table={table} />
+          <DaysSelect
+            table={table}
+            selectedDays={selectedDays}
+            setSelectedDays={setSelectedDays}
+          />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -116,12 +135,20 @@ export function Table({ data }: TableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-          <TypeCheckbox table={table} />
-          <FrequencyCheckbox table={table} />
-        </div>
+        <FilterModal>
+          <TypeCheckbox
+            table={table}
+            selectedTypes={selectedTypes}
+            setSelectedTypes={setSelectedTypes}
+          />
+          <FrequencyCheckbox
+            table={table}
+            selectedFrequencies={selectedFrequencies}
+            setSelectedFrequencies={setSelectedFrequencies}
+          />
+        </FilterModal>
       </div>
-      <div className="w-full overflow-x-auto rounded-md border -mx-4 sm:mx-0">
+      <div className="w-full overflow-x-auto rounded-md border">
         <ShadTable style={{ width: '100%', minWidth: table.getTotalSize() }}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
