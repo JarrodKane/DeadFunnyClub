@@ -4,6 +4,7 @@ interface CellTypeProps {
   type: string;
 }
 
+
 export function CellType({ type }: CellTypeProps) {
   if (!type || type === '—') {
     return <>—</>;

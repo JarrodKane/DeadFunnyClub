@@ -15,23 +15,18 @@ export function Header() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link to="/">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Home
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                <Link to="/">Home</Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to="/melbourne">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Melbourne
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                <Link to="/melbourne">Melbourne</Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <ThemeToggle />
             </NavigationMenuItem>
-
           </NavigationMenuList>
         </NavigationMenu>
       </div>

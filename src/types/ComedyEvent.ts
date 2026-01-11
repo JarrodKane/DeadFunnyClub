@@ -2,6 +2,11 @@ import { type DayOfWeek } from './day';
 import { type Frequency } from './frequency';
 import { type ShowType } from './show-type';
 
+export interface RoomRunner {
+  name: string;
+  url?: string;
+}
+
 export interface ComedyEvent {
   Name: string;
   Day: DayOfWeek;
@@ -13,6 +18,6 @@ export interface ComedyEvent {
   'Venue (Insta)': string;
   FB: string;
   Insta: string;
-  'Room Runner (Insta)': string;
+  'Room Runner (Insta)': RoomRunner[];
   Info: string;
 }

@@ -38,12 +38,9 @@ interface TableProps {
   data: ComedyEvent[];
 }
 
-
-
 export function Table({ data }: TableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
   const [columnSizing, setColumnSizing] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
@@ -66,63 +63,65 @@ export function Table({ data }: TableProps) {
     },
   });
 
-
-
   if (data.length === 0) {
     return <p className="text-muted-foreground">No data available</p>;
   }
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex items-center gap-4 flex-wrap">
-        <Input
-          placeholder="Filter by name..."
-          value={(table.getColumn("Name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("Name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DaysSelect table={table} />
-        <TypeCheckbox table={table} />
-        <FrequencyCheckbox table={table} />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuCheckboxItem
-              checked={table.getAllColumns().filter(c => c.getCanHide()).every(c => c.getIsVisible())}
-              onCheckedChange={(value) => {
-                table.getAllColumns().filter(c => c.getCanHide()).forEach(c => c.toggleVisibility(!!value));
-              }}
-              className="font-bold"
-            >
-              Select All
-            </DropdownMenuCheckboxItem>
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+          <Input
+            placeholder="Filter by name..."
+            value={(table.getColumn("Name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("Name")?.setFilterValue(event.target.value)
+            }
+            className="flex-1 min-w-[150px] sm:max-w-sm"
+          />
+          <DaysSelect table={table} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuCheckboxItem
+                checked={table.getAllColumns().filter(c => c.getCanHide()).every(c => c.getIsVisible())}
+                onCheckedChange={(value) => {
+                  table.getAllColumns().filter(c => c.getCanHide()).forEach(c => c.toggleVisibility(!!value));
+                }}
+                className="font-bold"
+              >
+                Select All
+              </DropdownMenuCheckboxItem>
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+          <TypeCheckbox table={table} />
+          <FrequencyCheckbox table={table} />
+        </div>
       </div>
-      <div className="w-full overflow-x-auto rounded-md border">
+      <div className="w-full overflow-x-auto rounded-md border -mx-4 sm:mx-0">
         <ShadTable style={{ width: '100%', minWidth: table.getTotalSize() }}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -174,6 +173,6 @@ export function Table({ data }: TableProps) {
           </TableBody>
         </ShadTable>
       </div>
-    </div >
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchMelbourneComedy } from '../data/melbourne-comedy';
+import { fetchMelbourneComedy } from '../data/fetchComedy';
 
 export function useMelbourneComedy() {
   return useQuery({

@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import { DayBadge } from "../components/day-badge";
 import { type ComedyEvent } from '../types';
 import { CellType } from './cell-type';
 import { Button } from "./ui/button";
@@ -35,22 +36,8 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   },
   {
     accessorKey: "Day",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Day
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    size: 120,
-    cell: ({ row }) => {
-      const day = row.getValue("Day") as string;
-      return day?.replace(/^\d+\.\s*/, '') || '—';
-    },
+    header: "Day",
+    cell: ({ row }) => <DayBadge day={row.getValue("Day")} />,
   },
   {
     accessorKey: "Frequency",
@@ -88,8 +75,37 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   },
   {
     accessorKey: "Start",
-    header: "Start",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Start
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     size: 100,
+    cell: ({ row }) => {
+      const start = row.getValue("Start") as string;
+
+      if (!start || start === '???' || start === '—') {
+        return '—';
+      }
+
+      // Try to parse 24hr format (e.g., "19:30" or "7:30 PM")
+      const match = start.match(/^(\d{1,2}):(\d{2})/);
+      if (match) {
+        const hours = parseInt(match[1], 10);
+        const minutes = match[2];
+        const period = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+        return `${displayHours}:${minutes} ${period}`;
+      }
+
+      return start;
+    },
   },
   {
     accessorKey: "Type",
@@ -132,20 +148,34 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   },
   {
     accessorKey: "Room Runner (Insta)",
-    header: "Room Runner",
+    header: "Room Runners",
     size: 150,
     cell: ({ row }) => {
-      const insta = row.getValue("Room Runner (Insta)") as string;
-      return insta ? (
-        <a
-          href={insta}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline whitespace-normal break-words inline-block"
-        >
-          {insta}
-        </a>
-      ) : '—';
+      const runners = row.getValue("Room Runner (Insta)") as { name: string; url?: string }[];
+
+      if (!runners || runners.length === 0) {
+        return '—';
+      }
+
+      return (
+        <div className="whitespace-normal break-words space-y-1">
+          {runners.map((runner, index) => (
+            runner.url ? (
+              <a
+                key={index}
+                href={runner.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline block"
+              >
+                {runner.name}
+              </a>
+            ) : (
+              <div key={index}>{runner.name}</div>
+            )
+          ))}
+        </div>
+      );
     },
   },
   {

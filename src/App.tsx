@@ -4,6 +4,7 @@ import { Header } from './components/header';
 import { ThemeProvider } from './components/theme-provider';
 import { Home } from './routes/home';
 import { Melbourne } from './routes/melbourne';
+import { fetchMelbourneComedy } from './data/fetchComedy';
 
 const queryClient = new QueryClient();
 const rootRoute = createRootRoute({
@@ -25,6 +26,10 @@ const indexRoute = createRoute({
 const melbourneRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/melbourne',
+  loader: async () => {
+    const events = await fetchMelbourneComedy();
+    return { events };
+  },
   component: Melbourne,
 })
 
