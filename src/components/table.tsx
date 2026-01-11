@@ -9,9 +9,10 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
+  type ColumnSizingState
 } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type ComedyEvent } from '../types';
 import { Columns } from './columns';
 import { DaysSelect } from './days-select';
@@ -56,8 +57,21 @@ export function Table({
 }: TableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnSizing, setColumnSizing] = useState({});
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({
+    Name: window.innerWidth < 640 ? 100 : 200,
+  });
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  useEffect(() => {
+    const handleResize = () => {
+      setColumnSizing({
+        Name: window.innerWidth < 640 ? 100 : 200,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const table = useReactTable({
     data,
@@ -85,7 +99,7 @@ export function Table({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
           <Input
             placeholder="Filter by name..."
             value={(table.getColumn("Name")?.getFilterValue() as string) ?? ""}
@@ -94,46 +108,48 @@ export function Table({
             }
             className="flex-1 min-w-[150px] sm:max-w-sm"
           />
-          <DaysSelect
-            table={table}
-            selectedDays={selectedDays}
-            setSelectedDays={setSelectedDays}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuCheckboxItem
-                checked={table.getAllColumns().filter(c => c.getCanHide()).every(c => c.getIsVisible())}
-                onCheckedChange={(value) => {
-                  table.getAllColumns().filter(c => c.getCanHide()).forEach(c => c.toggleVisibility(!!value));
-                }}
-                className="font-bold"
-              >
-                Select All
-              </DropdownMenuCheckboxItem>
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-2">
+            <DaysSelect
+              table={table}
+              selectedDays={selectedDays}
+              setSelectedDays={setSelectedDays}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuCheckboxItem
+                  checked={table.getAllColumns().filter(c => c.getCanHide()).every(c => c.getIsVisible())}
+                  onCheckedChange={(value) => {
+                    table.getAllColumns().filter(c => c.getCanHide()).forEach(c => c.toggleVisibility(!!value));
+                  }}
+                  className="font-bold"
+                >
+                  Select All
+                </DropdownMenuCheckboxItem>
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <FilterModal>
           <TypeCheckbox
@@ -200,6 +216,6 @@ export function Table({
           </TableBody>
         </ShadTable>
       </div>
-    </div>
+    </div >
   );
 }

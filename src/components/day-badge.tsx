@@ -11,6 +11,17 @@ const DAY_COLORS = {
   Other: 'bg-gray-100 text-gray-800 border-gray-200',
 } as const;
 
+const DAY_ABBREVIATIONS: Record<string, string> = {
+  Monday: 'Mon',
+  Tuesday: 'Tue',
+  Wednesday: 'Wed',
+  Thursday: 'Thu',
+  Friday: 'Fri',
+  Saturday: 'Sat',
+  Sunday: 'Sun',
+  Other: 'Other',
+};
+
 export type DayOfWeek = keyof typeof DAY_COLORS;
 
 interface DayBadgeProps {
@@ -21,10 +32,11 @@ export const DayBadge = ({ day }: DayBadgeProps) => {
   // Remove the number prefix (e.g., "6.Saturday" -> "Saturday")
   const dayName = day.includes('.') ? day.split('.')[1] : day;
   const colorClass = DAY_COLORS[dayName as DayOfWeek] || DAY_COLORS.Other;
+  const abbreviation = DAY_ABBREVIATIONS[dayName] || dayName;
 
   return (
     <Badge variant="outline" className={colorClass}>
-      {dayName}
+      {abbreviation}
     </Badge>
   );
 };

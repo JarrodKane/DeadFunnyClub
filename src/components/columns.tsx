@@ -10,6 +10,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     accessorKey: "Name",
     header: "Name",
     size: 200,
+    minSize: 100,
     cell: ({ row }) => {
       const name = row.getValue("Name") as string;
       const insta = row.original.Insta;
@@ -20,7 +21,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
             href={insta}
             target="_blank"
             rel="noopener noreferrer"
-            className="whitespace-normal break-words text-primary hover:underline"
+            className="whitespace-normal break-words text-primary hover:underline max-w-[100px] sm:max-w-[200px]"
           >
             {name || '—'}
           </a>
@@ -28,7 +29,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       }
 
       return (
-        <div className="whitespace-normal break-words">
+        <div className="whitespace-normal break-words max-w-[100px] sm:max-w-[200px]">
           {name || '—'}
         </div>
       );
@@ -36,7 +37,18 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   },
   {
     accessorKey: "Day",
-    header: "Day",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Day
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    size: 80,
     cell: ({ row }) => <DayBadge day={row.getValue("Day")} />,
   },
   {
@@ -47,12 +59,12 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Frequency
+          Freq
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    size: 120,
+    size: 80,
     cell: ({ row }) => {
       const frequency = row.getValue("Frequency") as string;
       return frequency?.replace(/^\d+\.\s*/, '') || '—';
