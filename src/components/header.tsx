@@ -6,7 +6,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from './ui/navigation-menu';
-import { ThemeToggle } from './theme-toggle'
+import { ThemeToggle } from './theme-toggle';
 
 export function Header() {
   return (
@@ -22,6 +22,11 @@ export function Header() {
             <NavigationMenuItem>
               <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                 <Link to="/melbourne">Melbourne</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                <Link to="/melbourne/map">Map</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>

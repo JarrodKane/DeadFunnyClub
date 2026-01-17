@@ -1,19 +1,19 @@
 import { Link } from '@tanstack/react-router';
-import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Clock } from "lucide-react";
-import { DayBadge } from "../components/day-badge";
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Clock } from 'lucide-react';
+import { DayBadge } from '../components/day-badge';
 import { type ComedyEvent } from '../types';
 import { CellType } from './cell-type';
-import { Button } from "./ui/button";
+import { Button } from './ui/button';
 
 export const Columns: ColumnDef<ComedyEvent>[] = [
   {
-    accessorKey: "Name",
-    header: "Name",
+    accessorKey: 'Name',
+    header: 'Name',
     size: 200,
     minSize: 100,
     cell: ({ row }) => {
-      const name = row.getValue("Name") as string;
+      const name = row.getValue('Name') as string;
       const insta = row.original.Insta;
 
       if (insta) {
@@ -37,30 +37,26 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
 
-  // ... inside your Columns array
-
   {
-    accessorKey: "Day",
-    // 1. Force a strict small width
+    accessorKey: 'Day',
     size: 70,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          // 2. Use size="sm" and custom padding to squeeze the header
           size="sm"
           className="-ml-3 h-8 data-[state=open]:bg-accent"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>Day</span>
           <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <DayBadge day={row.getValue("Day")} />,
+    cell: ({ row }) => <DayBadge day={row.getValue('Day')} />,
   },
   {
-    accessorKey: "Start",
+    accessorKey: 'Start',
     size: 70,
     header: ({ column }) => {
       return (
@@ -68,16 +64,17 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
           variant="ghost"
           size="sm"
           className="-ml-3 h-8 data-[state=open]:bg-accent"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <Clock className="mr-2 h-3.5 w-3.5" />
           <ArrowUpDown className="h-3 w-3" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const start = row.getValue("Start") as string;
-      if (!start || start === '???' || start === '—') return <span className="text-muted-foreground">—</span>;
+      const start = row.getValue('Start') as string;
+      if (!start || start === '???' || start === '—')
+        return <span className="text-muted-foreground">—</span>;
 
       const match = start.match(/^(\d{1,2}):(\d{2})/);
       if (match) {
@@ -85,27 +82,29 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
         const displayHours = hours % 12 || 12;
         // The 'p' or 'a' is enough context, no need for " PM"
         const period = hours >= 12 ? 'pm' : 'am';
-        return <span className="font-medium whitespace-nowrap">{`${displayHours}:${match[2]}${period}`}</span>;
+        return (
+          <span className="font-medium whitespace-nowrap">{`${displayHours}:${match[2]}${period}`}</span>
+        );
       }
       return <span className="text-xs">{start}</span>;
     },
   },
   {
-    accessorKey: "Frequency",
+    accessorKey: 'Frequency',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Freq
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     size: 80,
     cell: ({ row }) => {
-      const frequency = row.getValue("Frequency") as string;
+      const frequency = row.getValue('Frequency') as string;
       return frequency?.replace(/^\d+\.\s*/, '') || '—';
     },
     filterFn: (row, id, filterValue) => {
@@ -114,28 +113,29 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       }
       const value = row.getValue(id) as string;
       if (Array.isArray(filterValue)) {
-        return filterValue.some(filter => value?.includes(filter));
+        return filterValue.some((filter) => value?.includes(filter));
       }
       return value?.includes(filterValue);
     },
   },
   {
     // 1. Remove "id: location" so accessorKey works automatically
-    accessorKey: "Neighbourhood",
-    header: "Location",
+    accessorKey: 'Neighbourhood',
+    header: 'Location',
     size: 180,
     cell: ({ row }) => {
       // Now this works because the column ID matches the accessorKey
-      const neighbourhood = row.getValue("Neighbourhood") as string;
+      const neighbourhood = row.getValue('Neighbourhood') as string;
       const address = row.original.Address;
-      const venue = row.original["Venue (Insta)"];
+      const venue = row.original['Venue (Insta)'];
 
-      // Create slug only if we have a neighbourhood
       const slug = neighbourhood
-        ? neighbourhood.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+        ? neighbourhood
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '')
         : null;
 
-      // Clean venue logic
       let venueDisplay = venue;
       let venueLink = null;
       if (venue?.startsWith('http')) {
@@ -145,7 +145,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
 
       return (
         <div className="flex flex-col gap-1">
-          {/* Venue Name */}
           {venueLink ? (
             <a
               href={venueLink}
@@ -159,10 +158,8 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
             <span className="font-medium truncate">{venueDisplay || '—'}</span>
           )}
 
-          {/* Subtitle Line: Neighbourhood & Map */}
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             {slug ? (
-              // SCENARIO 1: We have a neighbourhood -> Show Link + (Map)
               <>
                 <Link
                   to="/melbourne/$neighbourhood"
@@ -183,7 +180,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
                 )}
               </>
             ) : address ? (
-              // SCENARIO 2: No neighbourhood, but we have an address -> Show "View on Map"
               <a
                 href={address}
                 target="_blank"
@@ -193,7 +189,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
                 View on Map
               </a>
             ) : (
-              // SCENARIO 3: Nothing -> Show Dash
               <span>—</span>
             )}
           </div>
@@ -202,21 +197,21 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
-    accessorKey: "Type",
+    accessorKey: 'Type',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Type
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     size: 120,
     cell: ({ row }) => {
-      const type = row.getValue("Type") as string;
+      const type = row.getValue('Type') as string;
       return <CellType type={type} />;
     },
     filterFn: (row, id, filterValue) => {
@@ -225,19 +220,19 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       }
       const value = row.getValue(id) as string;
       if (Array.isArray(filterValue)) {
-        return filterValue.some(filter => value?.includes(filter));
+        return filterValue.some((filter) => value?.includes(filter));
       }
       return value?.includes(filterValue);
     },
   },
   {
-    id: "details",
-    accessorKey: "Ticket Price",
-    header: "Details",
+    id: 'details',
+    accessorKey: 'Ticket Price',
+    header: 'Details',
     size: 120,
     cell: ({ row }) => {
-      const price = row.original["Ticket Price"]; // Changed from row.getValue("Ticket Price")
-      const runners = row.original["Room Runner (Insta)"];
+      const price = row.original['Ticket Price']; // Changed from row.getValue("Ticket Price")
+      const runners = row.original['Room Runner (Insta)'];
 
       return (
         <div className="flex flex-col gap-1 w-[120px]">
@@ -248,10 +243,17 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
               {runners.map((runner, i) => (
                 <span key={i} className="break-all overflow-wrap-anywhere">
                   {runner.url ? (
-                    <a href={runner.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline">
+                    <a
+                      href={runner.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary hover:underline"
+                    >
                       {runner.name}
                     </a>
-                  ) : runner.name}
+                  ) : (
+                    runner.name
+                  )}
                 </span>
               ))}
             </div>
@@ -261,14 +263,12 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
-    accessorKey: "Info",
-    header: "Info",
+    accessorKey: 'Info',
+    header: 'Info',
     size: 300,
     minSize: 200,
     cell: ({ row }) => (
-      <div className="whitespace-normal break-words">
-        {row.getValue("Info") || '—'}
-      </div>
+      <div className="whitespace-normal break-words">{row.getValue('Info') || '—'}</div>
     ),
   },
 ];

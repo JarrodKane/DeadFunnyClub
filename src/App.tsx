@@ -1,11 +1,18 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRootRoute, createRoute, createRouter, Outlet, RouterProvider } from '@tanstack/react-router';
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  RouterProvider,
+} from '@tanstack/react-router';
 import { Header } from './components/header';
 import { ThemeProvider } from './components/theme-provider';
 import { Home } from './routes/home';
 import { Melbourne } from './routes/melbourne';
 import { fetchMelbourneComedy } from './data/fetchComedy';
 import { Neighbourhood } from './routes/neighbourhood';
+import { MapPage } from './routes/map';
 
 const queryClient = new QueryClient();
 const rootRoute = createRootRoute({
@@ -15,14 +22,13 @@ const rootRoute = createRootRoute({
       <Outlet />
     </div>
   ),
-})
-
+});
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: Home,
-})
+});
 
 const melbourneRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -32,32 +38,43 @@ const melbourneRoute = createRoute({
     return { events };
   },
   component: Melbourne,
-})
+});
+
+const mapRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/melbourne/map',
+  component: MapPage,
+  loader: async () => {
+    await queryClient.ensureQueryData({
+      queryKey: ['melbourne-comedy'],
+      queryFn: fetchMelbourneComedy,
+    });
+  },
+});
 
 const neighbourhoodRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/melbourne/$neighbourhood', // The $ tells it this is a variable
+  path: '/melbourne/$neighbourhood',
   component: Neighbourhood,
   loader: async () => {
     // Optional: Pre-fetch data here if you want, or let the component do it via useQuery
-    // Since we are caching with React Query, component-level fetching is often fine/easier.
     await queryClient.ensureQueryData({
       queryKey: ['melbourne-comedy'],
-      queryFn: fetchMelbourneComedy
+      queryFn: fetchMelbourneComedy,
     });
-  }
-})
+  },
+});
 
-const routeTree = rootRoute.addChildren([indexRoute, melbourneRoute, neighbourhoodRoute])
+const routeTree = rootRoute.addChildren([indexRoute, melbourneRoute, mapRoute, neighbourhoodRoute]);
 
 const router = createRouter({
   routeTree,
-  basepath: import.meta.env.BASE_URL
-})
+  basepath: import.meta.env.BASE_URL,
+});
 
 declare module '@tanstack/react-router' {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
 
@@ -68,8 +85,7 @@ function App() {
         <RouterProvider router={router} />
       </QueryClientProvider>
     </ThemeProvider>
-
-  )
+  );
 }
 
-export default App
+export default App;

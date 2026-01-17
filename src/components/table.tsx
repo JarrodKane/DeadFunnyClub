@@ -1,18 +1,14 @@
-import type {
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState
-} from "@tanstack/react-table";
+import type { ColumnFiltersState, SortingState, VisibilityState } from '@tanstack/react-table';
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnSizingState
-} from "@tanstack/react-table";
-import { useEffect, useState } from "react";
-import { Map, X } from "lucide-react"; // Import Icons
+  type ColumnSizingState,
+} from '@tanstack/react-table';
+import { Map, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { type ComedyEvent } from '../types';
 import { ColumnDropdowns } from './column-dropdown';
 import { Columns } from './columns';
@@ -20,8 +16,8 @@ import { DaysSelect } from './days-select';
 import { FilterModal } from './filter-modal';
 import { FrequencyCheckbox } from './frequency-checkbox';
 import { TypeCheckbox } from './type-checkbox';
-import { VenueMap } from './venue-map';
-import { Input } from "./ui/input";
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 import {
   Table as ShadTable,
   TableBody,
@@ -29,8 +25,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
-import { Button } from "./ui/button"; // Assuming you have a Button component
+} from './ui/table';
+import { VenueMap } from './venue-map';
 
 interface TableProps {
   data: ComedyEvent[];
@@ -49,7 +45,7 @@ export function Table({
   selectedFrequencies,
   setSelectedFrequencies,
   selectedTypes,
-  setSelectedTypes
+  setSelectedTypes,
 }: TableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -79,7 +75,7 @@ export function Table({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnSizingChange: setColumnSizing,
     onColumnVisibilityChange: setColumnVisibility,
-    columnResizeMode: "onChange",
+    columnResizeMode: 'onChange',
     state: {
       sorting,
       columnFilters,
@@ -92,16 +88,16 @@ export function Table({
     return <p className="text-muted-foreground">No data available</p>;
   }
 
+  const filteredData = table.getRowModel().rows.map((row) => row.original);
+
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
           <Input
             placeholder="Filter by name..."
-            value={(table.getColumn("Name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("Name")?.setFilterValue(event.target.value)
-            }
+            value={(table.getColumn('Name')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('Name')?.setFilterValue(event.target.value)}
             className="flex-1 min-w-[150px] sm:max-w-sm"
           />
           <div className="flex items-center gap-2">
@@ -126,9 +122,7 @@ export function Table({
             >
               <Map className="h-4 w-4" />
             </Button>
-            <ColumnDropdowns
-              table={table}
-            />
+            <ColumnDropdowns table={table} />
           </div>
         </div>
         <FilterModal>
@@ -157,10 +151,7 @@ export function Table({
                   >
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
@@ -177,10 +168,7 @@ export function Table({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      style={{ width: cell.column.getSize() }}
-                    >
+                    <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -197,20 +185,25 @@ export function Table({
         </ShadTable>
       </div>
       {showMap && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-5xl h-[80vh] rounded-xl shadow-2xl overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between  bg-background   px-4 py-3 border-b  z-10">
-              <h3 className="font-bold text-lg">Map View ({data.length} shows)</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowMap(false)} className="cursor-pointer">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-in fade-in duration-200 ">
+          <div className="relative w-full max-w-5xl h-[80vh] rounded-xl shadow-2xl overflow-hidden flex flex-col border-accent border">
+            <div className="flex items-center justify-between  bg-background   px-4 py-3 border-b   z-10">
+              <h3 className="font-bold text-lg">Map View ({filteredData.length} shows)</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowMap(false)}
+                className="cursor-pointer"
+              >
                 <X className="h-5 w-5 cursor-pointer" />
               </Button>
             </div>
             <div className="flex-1 w-full relative">
-              <VenueMap events={data} />
+              <VenueMap events={filteredData} />
             </div>
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
 }
