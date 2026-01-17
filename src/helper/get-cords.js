@@ -1,4 +1,4 @@
-// const API_KEY = 'AIzaSyASQhy6gI5pQH7ux2SfrFSsAVFJ6OR1N0s'; 
+// const API_KEY = ''; 
 
 const rawInput = `
 Bergy Bandroom	https://www.google.com/maps/search/?api=1&query=Bergy+Bandroom+Brunswick
