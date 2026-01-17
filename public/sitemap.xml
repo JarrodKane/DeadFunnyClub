@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://deadfunnyclub.com/</loc>
+    <loc>https://deadfunny.club/</loc>
     <lastmod>2026-01-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://deadfunnyclub.com/melbourne</loc>
+    <loc>https://deadfunny.club/melbourne</loc>
     <lastmod>2026-01-17</lastmod>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.8</priority>
   </url>
 </urlset>

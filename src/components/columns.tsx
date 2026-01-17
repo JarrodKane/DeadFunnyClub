@@ -194,7 +194,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     header: "Details",
     size: 120,
     cell: ({ row }) => {
-      const price = row.getValue("Ticket Price") as string;
+      const price = row.original["Ticket Price"]; // Changed from row.getValue("Ticket Price")
       const runners = row.original["Room Runner (Insta)"];
 
       return (
