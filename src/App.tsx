@@ -5,6 +5,7 @@ import { ThemeProvider } from './components/theme-provider';
 import { Home } from './routes/home';
 import { Melbourne } from './routes/melbourne';
 import { fetchMelbourneComedy } from './data/fetchComedy';
+import { Neighbourhood } from './routes/neighbourhood';
 
 const queryClient = new QueryClient();
 const rootRoute = createRootRoute({
@@ -33,7 +34,21 @@ const melbourneRoute = createRoute({
   component: Melbourne,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, melbourneRoute])
+const neighbourhoodRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/melbourne/$neighbourhood', // The $ tells it this is a variable
+  component: Neighbourhood,
+  loader: async () => {
+    // Optional: Pre-fetch data here if you want, or let the component do it via useQuery
+    // Since we are caching with React Query, component-level fetching is often fine/easier.
+    await queryClient.ensureQueryData({
+      queryKey: ['melbourne-comedy'],
+      queryFn: fetchMelbourneComedy
+    });
+  }
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, melbourneRoute, neighbourhoodRoute])
 
 const router = createRouter({
   routeTree,

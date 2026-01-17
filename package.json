@@ -20,6 +20,7 @@
     "@tanstack/react-query": "^5.90.16",
     "@tanstack/react-router": "^1.146.2",
     "@tanstack/react-table": "^8.21.3",
+    "@vis.gl/react-google-maps": "^1.7.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "input": "^1.0.1",

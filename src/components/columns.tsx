@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Clock, MapPin } from "lucide-react";
 import { DayBadge } from "../components/day-badge";
@@ -119,14 +120,20 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
-    id: 'location',
+    // 1. Remove "id: location" so accessorKey works automatically
     accessorKey: "Neighbourhood",
     header: "Location",
     size: 180,
     cell: ({ row }) => {
+      // Now this works because the column ID matches the accessorKey
       const neighbourhood = row.getValue("Neighbourhood") as string;
       const address = row.original.Address;
       const venue = row.original["Venue (Insta)"];
+
+      // Create slug only if we have a neighbourhood
+      const slug = neighbourhood
+        ? neighbourhood.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+        : null;
 
       // Clean venue logic
       let venueDisplay = venue;
@@ -138,21 +145,56 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
 
       return (
         <div className="flex flex-col gap-1">
+          {/* Venue Name */}
           {venueLink ? (
-            <a href={venueLink} target="_blank" rel="noopener noreferrer" className="font-medium hover:underline truncate">
+            <a
+              href={venueLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium hover:underline truncate"
+            >
               {venueDisplay}
             </a>
           ) : (
             <span className="font-medium truncate">{venueDisplay || '—'}</span>
           )}
 
+          {/* Subtitle Line: Neighbourhood & Map */}
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <MapPin className="h-3 w-3" />
-            <span>{neighbourhood}</span>
-            {address && (
-              <a href={address} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">
-                (Map)
+            {slug ? (
+              // SCENARIO 1: We have a neighbourhood -> Show Link + (Map)
+              <>
+                <Link
+                  to="/melbourne/$neighbourhood"
+                  params={{ neighbourhood: slug }}
+                  className="hover:underline font-medium hover:text-primary transition-colors"
+                >
+                  {neighbourhood}
+                </Link>
+                {address && (
+                  <a
+                    href={address}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline ml-1"
+                  >
+                    (Map)
+                  </a>
+                )}
+              </>
+            ) : address ? (
+              // SCENARIO 2: No neighbourhood, but we have an address -> Show "View on Map"
+              <a
+                href={address}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline hover:text-primary"
+              >
+                View on Map
               </a>
+            ) : (
+              // SCENARIO 3: Nothing -> Show Dash
+              <span>—</span>
             )}
           </div>
         </div>

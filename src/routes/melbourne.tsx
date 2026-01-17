@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { fetchMelbourneComedy } from '../data/fetchComedy';
 import { Table } from '../components';
+import { GeocodeHelper } from '../components/geocode-helper';
+import { VenueMap } from '../components/venue-map';
 
 export function Melbourne() {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
@@ -108,6 +110,11 @@ export function Melbourne() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-10">
+      <div className="w-full max-w-7xl">
+        <VenueMap events={events} />
+        {/* Use the same map context or ensure APIProvider is wrapping this */}
+        <GeocodeHelper events={events} />
+      </div>
       <div className="flex flex-col gap-6 w-full max-w-7xl">
         <h1 className="text-3xl sm:text-5xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>
           Melbourne Comedy Shows
