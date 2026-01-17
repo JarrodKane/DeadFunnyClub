@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Table } from '../components';
 import { fetchMelbourneComedy } from '../data/fetchComedy';
+import { NeighbourhoodSelect } from '../components/neighbourhood-select';
 
 export function Melbourne() {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
@@ -115,9 +116,12 @@ export function Melbourne() {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-10">
       <div className="flex flex-col gap-6 w-full max-w-7xl">
-        <h1 className="text-3xl sm:text-5xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>
-          Melbourne Comedy Shows
-        </h1>
+        <div className='flex gap-3.5'>
+          <h1 className="text-3xl sm:text-5xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>
+            Melbourne Comedy Shows
+          </h1>
+          <NeighbourhoodSelect events={events} />
+        </div>
         <Table
           data={events}
           selectedDays={selectedDays}

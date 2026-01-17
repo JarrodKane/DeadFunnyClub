@@ -20,7 +20,7 @@ import { DaysSelect } from './days-select';
 import { FilterModal } from './filter-modal';
 import { FrequencyCheckbox } from './frequency-checkbox';
 import { TypeCheckbox } from './type-checkbox';
-import { VenueMap } from './venue-map'; // Import the Map
+import { VenueMap } from './venue-map';
 import { Input } from "./ui/input";
 import {
   Table as ShadTable,
