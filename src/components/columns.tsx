@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Clock, MapPin } from "lucide-react";
 import { DayBadge } from "../components/day-badge";
 import { type ComedyEvent } from '../types';
 import { CellType } from './cell-type';
@@ -35,21 +35,59 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       );
     },
   },
+
+  // ... inside your Columns array
+
   {
     accessorKey: "Day",
+    // 1. Force a strict small width
+    size: 70,
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          // 2. Use size="sm" and custom padding to squeeze the header
+          size="sm"
+          className="-ml-3 h-8 data-[state=open]:bg-accent"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Day
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <span>Day</span>
+          <ArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
       )
     },
-    size: 80,
     cell: ({ row }) => <DayBadge day={row.getValue("Day")} />,
+  },
+  {
+    accessorKey: "Start",
+    size: 70,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-3 h-8 data-[state=open]:bg-accent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <Clock className="mr-2 h-3.5 w-3.5" />
+          <ArrowUpDown className="h-3 w-3" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const start = row.getValue("Start") as string;
+      if (!start || start === '???' || start === '—') return <span className="text-muted-foreground">—</span>;
+
+      const match = start.match(/^(\d{1,2}):(\d{2})/);
+      if (match) {
+        const hours = parseInt(match[1], 10);
+        const displayHours = hours % 12 || 12;
+        // The 'p' or 'a' is enough context, no need for " PM"
+        const period = hours >= 12 ? 'pm' : 'am';
+        return <span className="font-medium whitespace-nowrap">{`${displayHours}:${match[2]}${period}`}</span>;
+      }
+      return <span className="text-xs">{start}</span>;
+    },
   },
   {
     accessorKey: "Frequency",
@@ -81,42 +119,44 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
+    id: 'location',
     accessorKey: "Neighbourhood",
-    header: "Neighbourhood",
-    size: 150,
-  },
-  {
-    accessorKey: "Start",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Start
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    size: 100,
+    header: "Location",
+    size: 180,
     cell: ({ row }) => {
-      const start = row.getValue("Start") as string;
+      const neighbourhood = row.getValue("Neighbourhood") as string;
+      const address = row.original.Address;
+      const venue = row.original["Venue (Insta)"];
 
-      if (!start || start === '???' || start === '—') {
-        return '—';
+      // Clean venue logic
+      let venueDisplay = venue;
+      let venueLink = null;
+      if (venue?.startsWith('http')) {
+        venueDisplay = venue.replace(/^https?:\/\/(www\.)?instagram\.com\//, '@');
+        venueLink = venue;
       }
 
-      // Try to parse 24hr format (e.g., "19:30" or "7:30 PM")
-      const match = start.match(/^(\d{1,2}):(\d{2})/);
-      if (match) {
-        const hours = parseInt(match[1], 10);
-        const minutes = match[2];
-        const period = hours >= 12 ? 'PM' : 'AM';
-        const displayHours = hours % 12 || 12;
-        return `${displayHours}:${minutes} ${period}`;
-      }
+      return (
+        <div className="flex flex-col gap-1">
+          {venueLink ? (
+            <a href={venueLink} target="_blank" rel="noopener noreferrer" className="font-medium hover:underline truncate">
+              {venueDisplay}
+            </a>
+          ) : (
+            <span className="font-medium truncate">{venueDisplay || '—'}</span>
+          )}
 
-      return start;
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <MapPin className="h-3 w-3" />
+            <span>{neighbourhood}</span>
+            {address && (
+              <a href={address} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline ml-1">
+                (Map)
+              </a>
+            )}
+          </div>
+        </div>
+      );
     },
   },
   {
@@ -149,43 +189,31 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
+    id: "details",
     accessorKey: "Ticket Price",
-    header: "Price",
-    size: 100,
-    cell: ({ row }) => (
-      <div className="whitespace-normal break-words">
-        {row.getValue("Ticket Price") || '—'}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "Room Runner (Insta)",
-    header: "Room Runners",
-    size: 150,
+    header: "Details",
+    size: 120,
     cell: ({ row }) => {
-      const runners = row.getValue("Room Runner (Insta)") as { name: string; url?: string }[];
-
-      if (!runners || runners.length === 0) {
-        return '—';
-      }
+      const price = row.getValue("Ticket Price") as string;
+      const runners = row.original["Room Runner (Insta)"];
 
       return (
-        <div className="whitespace-normal break-words space-y-1">
-          {runners.map((runner, index) => (
-            runner.url ? (
-              <a
-                key={index}
-                href={runner.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline block"
-              >
-                {runner.name}
-              </a>
-            ) : (
-              <div key={index}>{runner.name}</div>
-            )
-          ))}
+        <div className="flex flex-col gap-1 w-[120px]">
+          <span className="font-medium break-words">🎟️ {price || '—'}</span>
+          {runners && runners.length > 0 && (
+            <div className="text-xs text-muted-foreground flex flex-col overflow-hidden">
+              <span className="opacity-70">Run by: </span>
+              {runners.map((runner, i) => (
+                <span key={i} className="break-all overflow-wrap-anywhere">
+                  {runner.url ? (
+                    <a href={runner.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary hover:underline">
+                      {runner.name}
+                    </a>
+                  ) : runner.name}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       );
     },

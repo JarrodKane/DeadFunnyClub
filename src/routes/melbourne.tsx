@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchMelbourneComedy } from '../data/fetchComedy';
 import { Table } from '../components';
 
@@ -16,6 +16,91 @@ export function Melbourne() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    document.title = 'Melbourne Comedy Shows & Stand-Up Events | Dead Funny Club';
+
+    // Meta description
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute('content', 'Find Melbourne comedy shows, stand-up events, and open mics. Complete weekly listings with venues, prices, and showtimes across all Melbourne neighbourhoods. Updated daily.');
+
+    // Meta keywords
+    let metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta');
+      metaKeywords.setAttribute('name', 'keywords');
+      document.head.appendChild(metaKeywords);
+    }
+    metaKeywords.setAttribute('content', 'Melbourne comedy, stand-up comedy Melbourne, comedy shows Melbourne, open mic Melbourne, comedy events, live comedy, Melbourne entertainment');
+
+    // Open Graph tags
+    const ogTags = [
+      { property: 'og:title', content: 'Melbourne Comedy Shows & Stand-Up Events | Dead Funny Club' },
+      { property: 'og:description', content: 'Find Melbourne comedy shows, stand-up events, and open mics. Complete weekly listings with venues, prices, and showtimes.' },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: window.location.href },
+    ];
+
+    ogTags.forEach(({ property, content }) => {
+      let tag = document.querySelector(`meta[property="${property}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute('property', property);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    });
+
+    // Canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', window.location.href);
+
+    // Add structured data for comedy events
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Melbourne Comedy Shows",
+      "description": "Complete listing of comedy shows and stand-up events in Melbourne",
+      "itemListElement": events.slice(0, 20).map((event, index) => ({
+        "@type": "Event",
+        "position": index + 1,
+        "name": event.Name,
+        "startDate": event.Day,
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "location": {
+          "@type": "Place",
+          "name": event.Neighbourhood,
+          "address": event.Address || event.Neighbourhood
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": event["Ticket Price"],
+          "priceCurrency": "AUD"
+        }
+      }))
+    };
+
+    let script = document.querySelector('script[type="application/ld+json"]');
+    if (!script) {
+      script = document.createElement('script');
+      script.setAttribute('type', 'application/ld+json');
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(structuredData);
+
+
+  }, [events]);
 
   if (isLoading) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;

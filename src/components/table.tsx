@@ -20,6 +20,7 @@ import { FilterModal } from './filter-modal';
 import { FrequencyCheckbox } from './frequency-checkbox';
 import { TypeCheckbox } from './type-checkbox';
 import { Button } from "./ui/button";
+import { ColumnDropdowns } from './column-dropdown'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -114,41 +115,9 @@ export function Table({
               selectedDays={selectedDays}
               setSelectedDays={setSelectedDays}
             />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto">
-                  Columns <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuCheckboxItem
-                  checked={table.getAllColumns().filter(c => c.getCanHide()).every(c => c.getIsVisible())}
-                  onCheckedChange={(value) => {
-                    table.getAllColumns().filter(c => c.getCanHide()).forEach(c => c.toggleVisibility(!!value));
-                  }}
-                  className="font-bold"
-                >
-                  Select All
-                </DropdownMenuCheckboxItem>
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    )
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ColumnDropdowns
+              table={table}
+            />
           </div>
         </div>
         <FilterModal>

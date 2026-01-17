@@ -11,6 +11,7 @@ export interface ComedyEvent {
   Name: string;
   Day: DayOfWeek;
   Neighbourhood: string;
+  Address: string;
   Start: string;
   Frequency: Frequency;
   Type: ShowType;
