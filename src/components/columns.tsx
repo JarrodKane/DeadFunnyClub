@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Clock, MapPin } from "lucide-react";
+import { ArrowUpDown, Clock } from "lucide-react";
 import { DayBadge } from "../components/day-badge";
 import { type ComedyEvent } from '../types';
 import { CellType } from './cell-type';

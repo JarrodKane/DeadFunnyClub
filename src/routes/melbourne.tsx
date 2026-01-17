@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { fetchMelbourneComedy } from '../data/fetchComedy';
 import { Table } from '../components';
-import { GeocodeHelper } from '../components/geocode-helper';
-import { VenueMap } from '../components/venue-map';
+import { fetchMelbourneComedy } from '../data/fetchComedy';
 
 export function Melbourne() {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
@@ -22,7 +20,6 @@ export function Melbourne() {
   useEffect(() => {
     document.title = 'Melbourne Comedy Shows & Stand-Up Events | Dead Funny Club';
 
-    // Meta description
     let metaDescription = document.querySelector('meta[name="description"]');
     if (!metaDescription) {
       metaDescription = document.createElement('meta');
@@ -104,17 +101,19 @@ export function Melbourne() {
 
   }, [events]);
 
+
+  useEffect(() => {
+    document.title = 'Melbourne Comedy Shows & Stand-Up Events | Dead Funny Club';
+    // ... (Your existing Meta/SEO code is perfect, keep it here) ...
+  }, [events]);
+
   if (isLoading) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   }
 
+
   return (
     <main className="flex min-h-screen flex-col items-center p-4 sm:p-10">
-      <div className="w-full max-w-7xl">
-        <VenueMap events={events} />
-        {/* Use the same map context or ensure APIProvider is wrapping this */}
-        <GeocodeHelper events={events} />
-      </div>
       <div className="flex flex-col gap-6 w-full max-w-7xl">
         <h1 className="text-3xl sm:text-5xl font-bold" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>
           Melbourne Comedy Shows

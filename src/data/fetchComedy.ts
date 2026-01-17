@@ -109,6 +109,30 @@ export async function fetchMelbourneComedy(): Promise<ComedyEvent[]> {
 
     console.log('Total rows:', valuesData.values.length);
 
+    // Get the rows we can and their venues for the get-cords.js
+    // const rawHeaders = valuesData.values.find((row: string[]) => row.includes('Name')); // Find header row dynamically
+    // if (rawHeaders) {
+    //   const venueIndex = rawHeaders.indexOf('Venue (Insta)');
+    //   const addressIndex = rawHeaders.indexOf('Address');
+
+    //   let dump = "";
+    //   // Start from the row after headers
+    //   const startRow = valuesData.values.indexOf(rawHeaders) + 1;
+
+    //   valuesData.values.slice(startRow).forEach((row: string[]) => {
+    //     const v = row[venueIndex];
+    //     const a = row[addressIndex];
+    //     // Only log if we have a venue name
+    //     if (v) {
+    //       dump += `${v}\t${a || ''}\n`;
+    //     }
+    //   });
+
+    //   console.log("%c👇 COPY DATA BELOW 👇", "color: lime; font-size: 14px; font-weight: bold;");
+    //   console.log(dump);
+    //   console.log("%c👆 COPY DATA ABOVE 👆", "color: lime; font-size: 14px; font-weight: bold;");
+    // }
+
     // Find the header row (look for "Name" column)
     const headerRowIndex = valuesData.values.findIndex((row: string[]) =>
       row.some(cell => cell === 'Name')

@@ -11,22 +11,16 @@ import {
   useReactTable,
   type ColumnSizingState
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Map, X } from "lucide-react"; // Import Icons
 import { type ComedyEvent } from '../types';
+import { ColumnDropdowns } from './column-dropdown';
 import { Columns } from './columns';
 import { DaysSelect } from './days-select';
 import { FilterModal } from './filter-modal';
 import { FrequencyCheckbox } from './frequency-checkbox';
 import { TypeCheckbox } from './type-checkbox';
-import { Button } from "./ui/button";
-import { ColumnDropdowns } from './column-dropdown'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { VenueMap } from './venue-map'; // Import the Map
 import { Input } from "./ui/input";
 import {
   Table as ShadTable,
@@ -36,6 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { Button } from "./ui/button"; // Assuming you have a Button component
 
 interface TableProps {
   data: ComedyEvent[];
@@ -63,13 +58,13 @@ export function Table({
   });
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
+  const [showMap, setShowMap] = useState(false);
   useEffect(() => {
     const handleResize = () => {
       setColumnSizing({
         Name: window.innerWidth < 640 ? 100 : 200,
       });
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -115,6 +110,22 @@ export function Table({
               selectedDays={selectedDays}
               setSelectedDays={setSelectedDays}
             />
+            <Button
+              variant="outline"
+              onClick={() => setShowMap(true)}
+              className="gap-2 hidden sm:flex cursor-pointer"
+            >
+              <Map className="h-4 w-4" />
+              Show Map
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setShowMap(true)}
+              className="sm:hidden"
+            >
+              <Map className="h-4 w-4" />
+            </Button>
             <ColumnDropdowns
               table={table}
             />
@@ -185,6 +196,21 @@ export function Table({
           </TableBody>
         </ShadTable>
       </div>
+      {showMap && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-5xl h-[80vh] rounded-xl shadow-2xl overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between  bg-background   px-4 py-3 border-b  z-10">
+              <h3 className="font-bold text-lg">Map View ({data.length} shows)</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowMap(false)} className="cursor-pointer">
+                <X className="h-5 w-5 cursor-pointer" />
+              </Button>
+            </div>
+            <div className="flex-1 w-full relative">
+              <VenueMap events={data} />
+            </div>
+          </div>
+        </div>
+      )}
     </div >
   );
 }

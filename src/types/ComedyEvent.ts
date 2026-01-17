@@ -21,4 +21,6 @@ export interface ComedyEvent {
   Insta: string;
   'Room Runner (Insta)': RoomRunner[];
   Info: string;
+  Latitude?: string;
+  Longitude?: string;
 }
