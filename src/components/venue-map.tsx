@@ -1,5 +1,11 @@
-import { AdvancedMarker, APIProvider, Map as GoogleMap, Pin } from '@vis.gl/react-google-maps';
-import { useMemo, useState } from 'react';
+import {
+  AdvancedMarker,
+  APIProvider,
+  Map as GoogleMap,
+  Pin,
+  useMap,
+} from '@vis.gl/react-google-maps';
+import { useEffect, useMemo, useState } from 'react';
 import { getTypeAttributes } from '../helper';
 import { type ComedyEvent } from '../types';
 import { CellType } from './cell-type';
@@ -27,6 +33,7 @@ interface VenueLocation {
 
 function VenueMapContent({ events }: { events: ComedyEvent[] }) {
   const [selectedVenue, setSelectedVenue] = useState<VenueLocation | null>(null);
+  const map = useMap();
 
   const locations = useMemo(() => {
     const unique = new Map<string, VenueLocation>();
@@ -34,7 +41,6 @@ function VenueMapContent({ events }: { events: ComedyEvent[] }) {
     events.forEach((e) => {
       const rawVenue = e['Venue (Insta)']?.trim() || '';
 
-      // Clean up venue name
       let venueName = rawVenue
         .replace(/^https?:\/\/[^\s]+/, '')
         .replace('@', '')
@@ -85,6 +91,12 @@ function VenueMapContent({ events }: { events: ComedyEvent[] }) {
     return Array.from(unique.values());
   }, [events]);
 
+  useEffect(() => {
+    if (selectedVenue && map) {
+      map.panTo({ lat: selectedVenue.lat, lng: selectedVenue.lng });
+    }
+  }, [selectedVenue, map]);
+
   return (
     <GoogleMap
       defaultCenter={{ lat: -37.8136, lng: 144.9631 }}
@@ -103,7 +115,9 @@ function VenueMapContent({ events }: { events: ComedyEvent[] }) {
             key={loc.venueName}
             position={{ lat: loc.lat, lng: loc.lng }}
             title={loc.shows[0]?.name || loc.venueName}
-            onClick={() => setSelectedVenue(loc)}
+            onClick={() => {
+              setSelectedVenue(loc);
+            }}
             className="cursor-pointer"
           >
             <Pin
@@ -183,6 +197,7 @@ function VenueMapContent({ events }: { events: ComedyEvent[] }) {
     </GoogleMap>
   );
 }
+// ...existing code...
 
 export function VenueMap({ events }: VenueMapProps) {
   return (
