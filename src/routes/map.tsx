@@ -59,7 +59,7 @@ export function MapPage() {
     <div className="flex flex-col min-h-[calc(100vh-64px)]">
       <div className="w-full h-[60vh] sm:h-[65vh] relative bg-gray-100">
         <VenueMap events={filteredEvents} />
-        <div className="absolute top-4 left-4 z-10 bg-background backdrop-blur px-4 py-2 rounded-md shadow-sm border border-gray-200 text-sm font-medium">
+        <div className="absolute bottom-4 left-4 z-10 bg-background backdrop-blur px-4 py-2 rounded-md shadow-sm border border-gray-200 text-sm font-medium">
           {filteredEvents.length} venues found
         </div>
       </div>
@@ -77,7 +77,7 @@ export function MapPage() {
                 placeholder="Filter by name..."
                 value={(table.getColumn('Name')?.getFilterValue() as string) ?? ''}
                 onChange={(event) => table.getColumn('Name')?.setFilterValue(event.target.value)}
-                className="flex-1 min-w-[200px] sm:max-w-sm"
+                className="flex-1 sm:max-w-sm"
               />
               <div className="flex items-center gap-2">
                 <DaysSelect
