@@ -6,8 +6,8 @@ import {
   Outlet,
   RouterProvider,
 } from '@tanstack/react-router';
-import { Header } from './components/header';
-import { ThemeProvider } from './components/theme-provider';
+import { Header } from './components/layout/header';
+import { ThemeProvider } from './components/theme/theme-provider';
 import { Home } from './routes/home';
 import { Melbourne } from './routes/melbourne';
 import { fetchMelbourneComedy } from './data/fetchComedy';

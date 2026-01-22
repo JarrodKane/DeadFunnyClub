@@ -6,13 +6,13 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
-import { Columns } from '../components/columns';
-import { DaysSelect } from '../components/days-select';
-import { FilterModal } from '../components/filter-modal';
-import { FrequencyCheckbox } from '../components/frequency-checkbox';
-import { TypeCheckbox } from '../components/type-checkbox';
+import { Columns } from '../components/table/columns';
+import { DaysSelect } from '../components/filters/days-select';
+import { FilterModal } from '../components/filters/filter-modal';
+import { FrequencyCheckbox } from '../components/filters/frequency-checkbox';
+import { TypeCheckbox } from '../components/filters/type-checkbox';
 import { Input } from '../components/ui/input';
-import { VenueMap } from '../components/venue-map';
+import { VenueMap } from '../components/map/venue-map';
 import { fetchMelbourneComedy } from '../data/fetchComedy';
 
 export function MapPage() {

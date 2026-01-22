@@ -1,13 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 import { MapPin } from "lucide-react";
-import type { ComedyEvent } from "../types";
-import { Button } from "./ui/button";
+import type { ComedyEvent } from "../../types";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 interface NeighbourhoodSelectProps {
   events: ComedyEvent[];

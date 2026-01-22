@@ -1,10 +1,10 @@
+import { TypeBadge } from '@/components/badges/type-badge';
 import { Link } from '@tanstack/react-router';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Clock } from 'lucide-react';
-import { DayBadge } from '../components/day-badge';
-import { type ComedyEvent } from '../types';
-import { CellType } from './cell-type';
-import { Button } from './ui/button';
+import { type ComedyEvent } from '../../types';
+import { DayBadge } from '../badges/day-badge';
+import { Button } from '../ui/button';
 
 export const Columns: ColumnDef<ComedyEvent>[] = [
   {
@@ -36,7 +36,38 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       );
     },
   },
-
+  {
+    accessorKey: 'Type',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 px-2 sm:px-4"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <span className="hidden sm:inline">Type</span>
+          <span className="sm:hidden">T</span>
+          <ArrowUpDown className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+        </Button>
+      );
+    },
+    size: 60,
+    cell: ({ row }) => {
+      const type = row.getValue('Type') as string;
+      return <TypeBadge type={type} />;
+    },
+    filterFn: (row, id, filterValue) => {
+      if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) {
+        return true;
+      }
+      const value = row.getValue(id) as string;
+      if (Array.isArray(filterValue)) {
+        return filterValue.some((filter) => value?.includes(filter));
+      }
+      return value?.includes(filterValue);
+    },
+  },
   {
     accessorKey: 'Day',
     size: 70,
@@ -142,7 +173,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
         venueDisplay = venue.replace(/^https?:\/\/(www\.)?instagram\.com\//, '@');
         venueLink = venue;
       }
-
       return (
         <div className="flex flex-col gap-1">
           {venueLink ? (
@@ -194,35 +224,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
           </div>
         </div>
       );
-    },
-  },
-  {
-    accessorKey: 'Type',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Type
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    size: 120,
-    cell: ({ row }) => {
-      const type = row.getValue('Type') as string;
-      return <CellType type={type} />;
-    },
-    filterFn: (row, id, filterValue) => {
-      if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) {
-        return true;
-      }
-      const value = row.getValue(id) as string;
-      if (Array.isArray(filterValue)) {
-        return filterValue.some((filter) => value?.includes(filter));
-      }
-      return value?.includes(filterValue);
     },
   },
   {

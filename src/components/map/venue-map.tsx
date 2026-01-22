@@ -6,10 +6,10 @@ import {
   useMap,
 } from '@vis.gl/react-google-maps';
 import { useEffect, useMemo, useState } from 'react';
-import { getTypeAttributes } from '../helper';
-import { type ComedyEvent } from '../types';
-import { CellType } from './cell-type';
-import { DayBadge } from './day-badge';
+import { getTypeAttributes } from '../../helper';
+import { type ComedyEvent } from '../../types';
+import { TypeBadge } from '../badges/type-badge';
+import { DayBadge } from '../badges/day-badge';
 
 interface VenueMapProps {
   events: ComedyEvent[];
@@ -159,7 +159,7 @@ function VenueMapContent({ events }: { events: ComedyEvent[] }) {
                         </h4>
                       )}
                       <div className="flex items-center flex-wrap gap-2 text-xs font-medium text-muted-foreground">
-                        {show.type && <CellType type={show.type} />}
+                        {show.type && <TypeBadge type={show.type} />}
                         <span className="text-gray-600 dark:text-gray-400">
                           <DayBadge day={show.day} />
                           {show.time && ` • ${show.time}`}

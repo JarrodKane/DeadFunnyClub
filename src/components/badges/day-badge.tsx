@@ -1,4 +1,4 @@
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 
 const DAY_COLORS = {
   Monday: 'bg-blue-100 text-blue-800 border-blue-200',

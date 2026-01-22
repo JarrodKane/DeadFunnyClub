@@ -1,6 +1,6 @@
 import type { Table } from '@tanstack/react-table';
-import type { ComedyEvent } from '../types';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import type { ComedyEvent } from '../../types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface DaysSelectProps {
   table: Table<ComedyEvent>;

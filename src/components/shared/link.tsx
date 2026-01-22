@@ -1,7 +1,7 @@
 import { AiFillInstagram } from 'react-icons/ai';
 import { FaGithub, FaTicketAlt, FaTiktok, FaYoutube } from 'react-icons/fa';
 import { SiOnlyfans } from 'react-icons/si';
-import { IconType } from '../types';
+import { IconType } from '../../types';
 
 type LinkProps = {
   href: string;

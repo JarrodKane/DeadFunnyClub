@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router';
+import { ThemeToggle } from '../theme/theme-toggle';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from './ui/navigation-menu';
-import { ThemeToggle } from './theme-toggle';
+} from '../ui/navigation-menu';
 
 export function Header() {
   return (

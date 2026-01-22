@@ -9,15 +9,14 @@ import {
 } from '@tanstack/react-table';
 import { Map, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { type ComedyEvent } from '../types';
-import { ColumnDropdowns } from './column-dropdown';
-import { Columns } from './columns';
-import { DaysSelect } from './days-select';
-import { FilterModal } from './filter-modal';
-import { FrequencyCheckbox } from './frequency-checkbox';
-import { TypeCheckbox } from './type-checkbox';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { type ComedyEvent } from '../../types';
+import { DaysSelect } from '../filters/days-select';
+import { FilterModal } from '../filters/filter-modal';
+import { FrequencyCheckbox } from '../filters/frequency-checkbox';
+import { TypeCheckbox } from '../filters/type-checkbox';
+import { VenueMap } from '../map/venue-map';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import {
   Table as ShadTable,
   TableBody,
@@ -25,8 +24,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
-import { VenueMap } from './venue-map';
+} from '../ui/table';
+import { ColumnDropdowns } from './column-dropdown';
+import { Columns } from './columns';
 
 interface TableProps {
   data: ComedyEvent[];
@@ -53,8 +53,9 @@ export function Table({
     Name: window.innerWidth < 640 ? 100 : 200,
   });
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
   const [showMap, setShowMap] = useState(false);
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+
   useEffect(() => {
     const handleResize = () => {
       setColumnSizing({
@@ -166,7 +167,12 @@ export function Table({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  onClick={() => setSelectedRowId(row.id === selectedRowId ? null : row.id)}
+                  className={`cursor-pointer transition-colors ${row.id === selectedRowId ? 'bg-accent border-l-4 border-l-primary' : ''
+                    }`}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

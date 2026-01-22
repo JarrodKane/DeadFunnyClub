@@ -2,8 +2,8 @@ import { useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { fetchMelbourneComedy } from '../data/fetchComedy';
-import { Table } from '../components/table';
-import { VenueMap } from '../components/venue-map';
+import { Table } from '../components/table/table';
+import { VenueMap } from '../components/map/venue-map';
 import { toSlug } from '../helper';
 
 export function Neighbourhood() {

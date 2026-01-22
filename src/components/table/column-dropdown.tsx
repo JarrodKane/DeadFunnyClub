@@ -1,13 +1,13 @@
 import type { Table } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
-import type { ComedyEvent } from "../types";
-import { Button } from "./ui/button";
+import type { ComedyEvent } from "../../types";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 const COLUMN_LABELS: Record<string, string> = {
   name: "Name",

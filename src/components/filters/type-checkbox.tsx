@@ -1,8 +1,8 @@
 import type { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
-import type { ComedyEvent } from "../types";
-import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
+import type { ComedyEvent } from "../../types";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 
 interface TypeCheckboxProps {
   table: Table<ComedyEvent>;

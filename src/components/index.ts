@@ -1,2 +1,2 @@
-export * from './link'
-export * from './table'
+export * from './shared/link'
+export * from './table/table'
