@@ -1,7 +1,6 @@
 import { TypeBadge } from '@/components/badges/type-badge';
-import { Link } from '@tanstack/react-router';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Clock } from 'lucide-react';
+import { ArrowUpDown, Clock, MapPin } from 'lucide-react'; // Added MapPin icon
 import { type ComedyEvent } from '../../types';
 import { DayBadge } from '../badges/day-badge';
 import { Button } from '../ui/button';
@@ -111,7 +110,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       if (match) {
         const hours = parseInt(match[1], 10);
         const displayHours = hours % 12 || 12;
-        // The 'p' or 'a' is enough context, no need for " PM"
         const period = hours >= 12 ? 'pm' : 'am';
         return (
           <span className="font-medium whitespace-nowrap">{`${displayHours}:${match[2]}${period}`}</span>
@@ -150,78 +148,40 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
-    // 1. Remove "id: location" so accessorKey works automatically
     accessorKey: 'Neighbourhood',
     header: 'Location',
     size: 180,
     cell: ({ row }) => {
-      // Now this works because the column ID matches the accessorKey
+      // 1. Try to get the specific Venue Name (e.g. "The Exford")
+      // 2. Fallback to the City (e.g. "Melbourne")
+      // @ts-expect-error - VenueName is new, might not be in the type def yet
+      const venueName = row.original.VenueName;
       const neighbourhood = row.getValue('Neighbourhood') as string;
-      const address = row.original.Address;
-      const venue = row.original['Venue (Insta)'];
+      const displayName = venueName || neighbourhood || '—';
 
-      const slug = neighbourhood
-        ? neighbourhood
-          .toLowerCase()
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9-]/g, '')
-        : null;
+      const addressLink = row.original.Address;
 
-      let venueDisplay = venue;
-      let venueLink = null;
-      if (venue?.startsWith('http')) {
-        venueDisplay = venue.replace(/^https?:\/\/(www\.)?instagram\.com\//, '@');
-        venueLink = venue;
-      }
       return (
         <div className="flex flex-col gap-1">
-          {venueLink ? (
+          {/* Display Venue Name (or City) */}
+          <span className="font-medium truncate text-foreground" title={displayName}>
+            {displayName}
+          </span>
+
+          {/* Map Link */}
+          {addressLink && addressLink.startsWith('http') ? (
             <a
-              href={venueLink}
+              href={addressLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium hover:underline truncate"
+              className="flex items-center gap-1 text-xs text-primary hover:underline"
             >
-              {venueDisplay}
+              <MapPin className="h-3 w-3" />
+              View Map
             </a>
           ) : (
-            <span className="font-medium truncate">{venueDisplay || '—'}</span>
+            <span className="text-xs text-muted-foreground">—</span>
           )}
-
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            {slug ? (
-              <>
-                <Link
-                  to="/melbourne/$neighbourhood"
-                  params={{ neighbourhood: slug }}
-                  className="hover:underline font-medium hover:text-primary transition-colors"
-                >
-                  {neighbourhood}
-                </Link>
-                {address && (
-                  <a
-                    href={address}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline ml-1"
-                  >
-                    (Map)
-                  </a>
-                )}
-              </>
-            ) : address ? (
-              <a
-                href={address}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline hover:text-primary"
-              >
-                View on Map
-              </a>
-            ) : (
-              <span>—</span>
-            )}
-          </div>
         </div>
       );
     },
@@ -232,7 +192,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     header: 'Details',
     size: 120,
     cell: ({ row }) => {
-      const price = row.original['Ticket Price']; // Changed from row.getValue("Ticket Price")
+      const price = row.original['Ticket Price'];
       const runners = row.original['Room Runner (Insta)'];
 
       return (

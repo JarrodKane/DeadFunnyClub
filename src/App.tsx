@@ -4,17 +4,18 @@ import {
   createRoute,
   createRouter,
   Outlet,
+  redirect,
   RouterProvider,
 } from '@tanstack/react-router';
 import { Header } from './components/layout/header';
 import { ThemeProvider } from './components/theme/theme-provider';
+import { fetchComedy } from './data/fetchComedy';
+import { City } from './routes/city';
 import { Home } from './routes/home';
-import { Melbourne } from './routes/melbourne';
-import { fetchMelbourneComedy } from './data/fetchComedy';
-import { Neighbourhood } from './routes/neighbourhood';
-import { MapPage } from './routes/map';
+import { MapPage } from './routes/map'; // Import the updated component
 
 const queryClient = new QueryClient();
+
 const rootRoute = createRootRoute({
   component: () => (
     <div className="min-h-screen bg-background text-foreground">
@@ -30,42 +31,62 @@ const indexRoute = createRoute({
   component: Home,
 });
 
-const melbourneRoute = createRoute({
+// 1. OLD ROUTE REDIRECT (Optional but recommended)
+const legacyMapRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/melbourne/map',
+  loader: () => {
+    throw redirect({
+      to: '/$country/$city/map',
+      params: { country: 'au', city: 'melbourne' },
+    });
+  },
+});
+
+const legacyListRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/melbourne',
-  loader: async () => {
-    const events = await fetchMelbourneComedy();
-    return { events };
+  loader: () => {
+    throw redirect({
+      to: '/$country/$city',
+      params: { country: 'au', city: 'melbourne' },
+    });
   },
-  component: Melbourne,
+});
+
+// 2. NEW DYNAMIC ROUTES
+const cityRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/$country/$city',
+  component: City,
+  loader: async ({ params }) => {
+    await queryClient.ensureQueryData({
+      queryKey: ['comedy', params.country, params.city],
+      queryFn: () => fetchComedy(params.country, params.city),
+    });
+  },
 });
 
 const mapRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/melbourne/map',
+  path: '/$country/$city/map', // The new standard structure
   component: MapPage,
-  loader: async () => {
+  loader: async ({ params }) => {
     await queryClient.ensureQueryData({
-      queryKey: ['melbourne-comedy'],
-      queryFn: fetchMelbourneComedy,
+      queryKey: ['comedy', params.country, params.city],
+      queryFn: () => fetchComedy(params.country, params.city),
     });
   },
 });
 
-const neighbourhoodRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/melbourne/$neighbourhood',
-  component: Neighbourhood,
-  loader: async () => {
-    // Optional: Pre-fetch data here if you want, or let the component do it via useQuery
-    await queryClient.ensureQueryData({
-      queryKey: ['melbourne-comedy'],
-      queryFn: fetchMelbourneComedy,
-    });
-  },
-});
-
-const routeTree = rootRoute.addChildren([indexRoute, melbourneRoute, mapRoute, neighbourhoodRoute]);
+// 3. Register Routes
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  cityRoute,
+  mapRoute,
+  legacyListRoute,
+  legacyMapRoute,
+]);
 
 const router = createRouter({
   routeTree,
