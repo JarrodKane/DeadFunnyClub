@@ -170,7 +170,7 @@ export function Table({
                 <TableRow
                   key={row.id}
                   onClick={() => setSelectedRowId(row.id === selectedRowId ? null : row.id)}
-                  className={`cursor-pointer transition-colors ${row.id === selectedRowId ? 'bg-accent border-l-4 border-l-primary' : ''
+                  className={`transition-colors ${row.id === selectedRowId ? 'ring-1 ring-chart-3' : ''
                     }`}
                 >
                   {row.getVisibleCells().map((cell) => (

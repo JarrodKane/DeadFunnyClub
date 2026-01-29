@@ -2,17 +2,6 @@ import type { ComedyEvent } from '../types';
 
 const PAYLOAD_URL = import.meta.env.VITE_PAYLOAD_URL || 'https://admin.unchartedcomedy.com';
 
-const extractTextFromLexical = (root: any): string => {
-  if (!root?.children) return '';
-  return root.children
-    .map((child: any) => {
-      if (child.type === 'text') return child.text;
-      if (child.children) return extractTextFromLexical(child);
-      return '';
-    })
-    .join(' ');
-};
-
 export async function fetchComedy(country: string, city: string): Promise<ComedyEvent[]> {
   try {
     // 1. Find City by SLUG (Matches URL exactly)
@@ -86,7 +75,8 @@ export async function fetchComedy(country: string, city: string): Promise<Comedy
           name: runner.name,
           url: runner.url
         })) || [],
-        Info: extractTextFromLexical(room.info?.root),
+
+        Info: room.info,
         Latitude: lat,
         Longitude: lng
       };

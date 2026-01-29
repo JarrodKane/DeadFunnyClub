@@ -1,3 +1,4 @@
+import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical';
 import { type DayOfWeek } from './day';
 import { type Frequency } from './frequency';
 import { type ShowType } from './show-type';
@@ -20,7 +21,7 @@ export interface ComedyEvent {
   FB: string;
   Insta: string;
   'Room Runner (Insta)': RoomRunner[];
-  Info: string;
+  Info?: SerializedEditorState
   Latitude?: string;
   Longitude?: string;
 }

@@ -1,6 +1,7 @@
 import { TypeBadge } from '@/components/badges/type-badge';
+import { RichText } from '@payloadcms/richtext-lexical/react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Clock, MapPin } from 'lucide-react'; // Added MapPin icon
+import { ArrowUpDown, Clock, MapPin } from 'lucide-react';
 import { type ComedyEvent } from '../../types';
 import { DayBadge } from '../badges/day-badge';
 import { Button } from '../ui/button';
@@ -174,7 +175,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
               href={addressLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs text-primary hover:underline"
+              className="flex items-center gap-1 text-xs text-primary hover:underline w-fit"
             >
               <MapPin className="h-3 w-3" />
               View Map
@@ -194,7 +195,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     cell: ({ row }) => {
       const price = row.original['Ticket Price'];
       const runners = row.original['Room Runner (Insta)'];
-
       return (
         <div className="flex flex-col gap-1 w-[120px]">
           <span className="font-medium break-words">🎟️ {price || '—'}</span>
@@ -226,10 +226,18 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   {
     accessorKey: 'Info',
     header: 'Info',
-    size: 300,
-    minSize: 200,
-    cell: ({ row }) => (
-      <div className="whitespace-normal break-words">{row.getValue('Info') || '—'}</div>
-    ),
+    cell: ({ row }) => {
+      const infoData = row.getValue('Info') as ComedyEvent['Info'] | undefined;
+
+      if (!infoData || !infoData.root || !infoData.root.children) {
+        return <span className="text-muted-foreground">—</span>;
+      }
+
+      return (
+        <div className="whitespace-normal break-words prose prose-sm dark:prose-invert max-w-none">
+          <RichText data={infoData} />
+        </div>
+      );
+    },
   },
 ];
