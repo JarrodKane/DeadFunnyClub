@@ -9,20 +9,35 @@ import { Button } from '../ui/button';
 export const Columns: ColumnDef<ComedyEvent>[] = [
   {
     accessorKey: 'Name',
-    header: 'Name',
-    size: 200,
-    minSize: 100,
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-8 px-2 sm:px-4"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        <div className="max-w-[80px]" title="Name">
+          Name
+        </div>
+        <ArrowUpDown className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+      </Button>
+
+    ),
+    size: 80,
+    minSize: 50,
+    maxSize: 100,
+    enableResizing: false,
     cell: ({ row }) => {
       const name = row.getValue('Name') as string;
       const insta = row.original.Insta;
-
       if (insta) {
         return (
           <a
             href={insta}
             target="_blank"
             rel="noopener noreferrer"
-            className="whitespace-normal break-words text-primary hover:underline max-w-[100px] sm:max-w-[200px]"
+            className="block w-[120px] whitespace-normal break-words text-primary hover:underline"
+            title={name}
           >
             {name || '—'}
           </a>
@@ -30,7 +45,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       }
 
       return (
-        <div className="whitespace-normal break-words max-w-[100px] sm:max-w-[200px]">
+        <div className="block w-[120px] whitespace-normal break-words" title={name}>
           {name || '—'}
         </div>
       );
@@ -103,20 +118,21 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       );
     },
     cell: ({ row }) => {
-      const start = row.getValue('Start') as string;
-      if (!start || start === '???' || start === '—')
-        return <span className="text-muted-foreground">—</span>;
-
-      const match = start.match(/^(\d{1,2}):(\d{2})/);
-      if (match) {
-        const hours = parseInt(match[1], 10);
-        const displayHours = hours % 12 || 12;
-        const period = hours >= 12 ? 'pm' : 'am';
+      const val = row.getValue('Start');
+      if (!val) return <span className="text-muted-foreground">—</span>;
+      const date = new Date(val as string);
+      if (!isNaN(date.getTime())) {
         return (
-          <span className="font-medium whitespace-nowrap">{`${displayHours}:${match[2]}${period}`}</span>
+          <span className="font-medium whitespace-nowrap">
+            {date.toLocaleTimeString([], {
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true, // Forces "7:00 pm"
+            }).toLowerCase()}
+          </span>
         );
       }
-      return <span className="text-xs">{start}</span>;
+      return <span className="font-medium whitespace-nowrap">{String(val)}</span>;
     },
   },
   {
@@ -151,11 +167,8 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   {
     accessorKey: 'Neighbourhood',
     header: 'Location',
-    size: 180,
+    size: 100,
     cell: ({ row }) => {
-      // 1. Try to get the specific Venue Name (e.g. "The Exford")
-      // 2. Fallback to the City (e.g. "Melbourne")
-      // @ts-expect-error - VenueName is new, might not be in the type def yet
       const venueName = row.original.VenueName;
       const neighbourhood = row.getValue('Neighbourhood') as string;
       const displayName = venueName || neighbourhood || '—';
@@ -163,13 +176,12 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       const addressLink = row.original.Address;
 
       return (
-        <div className="flex flex-col gap-1">
-          {/* Display Venue Name (or City) */}
-          <span className="font-medium truncate text-foreground" title={displayName}>
+        // Added max-w-[140px] to match the column size and force wrapping
+        <div className="flex flex-col gap-1 max-w-[100px]">
+          <span className="font-medium text-foreground leading-tight whitespace-normal break-words">
             {displayName}
           </span>
 
-          {/* Map Link */}
           {addressLink && addressLink.startsWith('http') ? (
             <a
               href={addressLink}
@@ -177,7 +189,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-xs text-primary hover:underline w-fit"
             >
-              <MapPin className="h-3 w-3" />
+              <MapPin className="h-3 w-3 flex-shrink-0" />
               View Map
             </a>
           ) : (
