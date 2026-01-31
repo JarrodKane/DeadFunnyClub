@@ -169,6 +169,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     header: 'Location',
     size: 100,
     cell: ({ row }) => {
+      // @ts-ignore
       const venueName = row.original.VenueName;
       const neighbourhood = row.getValue('Neighbourhood') as string;
       const displayName = venueName || neighbourhood || '—';
