@@ -140,7 +140,7 @@ export function Table({
         </FilterModal>
       </div>
       <div className="w-full overflow-x-auto rounded-md border">
-        <ShadTable style={{ width: '100%', minWidth: table.getTotalSize() }}>
+        <ShadTable className="table-fixed" style={{ width: '100%', minWidth: table.getTotalSize() }}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -148,7 +148,10 @@ export function Table({
                   <TableHead
                     key={header.id}
                     className="relative"
-                    style={{ width: header.getSize() }}
+                    // style={{ width: header.getSize() }}
+                    style={{
+                      width: header.column.id === 'Info' ? 'auto' : header.getSize()
+                    }}
                   >
                     {header.isPlaceholder
                       ? null

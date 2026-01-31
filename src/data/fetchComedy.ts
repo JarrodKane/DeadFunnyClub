@@ -59,6 +59,7 @@ export async function fetchComedy(country: string, city: string): Promise<Comedy
       }
 
       return {
+        id: room.id,
         Name: room.name,
         Day: room.day,
         Neighbourhood: room.city?.name || city,

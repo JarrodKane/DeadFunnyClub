@@ -9,6 +9,7 @@ export interface RoomRunner {
 }
 
 export interface ComedyEvent {
+  id: string;
   Name: string;
   Day: DayOfWeek;
   Neighbourhood: string;

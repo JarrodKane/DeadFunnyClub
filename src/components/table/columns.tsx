@@ -5,6 +5,7 @@ import { ArrowUpDown, Clock, MapPin } from 'lucide-react';
 import { type ComedyEvent } from '../../types';
 import { DayBadge } from '../badges/day-badge';
 import { Button } from '../ui/button';
+import { ReportIssueModal } from '../ReportIssueModal'
 
 export const Columns: ColumnDef<ComedyEvent>[] = [
   {
@@ -21,37 +22,45 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
         </div>
         <ArrowUpDown className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
       </Button>
-
     ),
-    size: 80,
-    minSize: 50,
-    maxSize: 100,
+    size: 160,
+    minSize: 140,
     enableResizing: false,
     cell: ({ row }) => {
       const name = row.getValue('Name') as string;
       const insta = row.original.Insta;
-      if (insta) {
-        return (
-          <a
-            href={insta}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-[120px] whitespace-normal break-words text-primary hover:underline"
-            title={name}
-          >
-            {name || '—'}
-          </a>
-        );
-      }
+      // Safe ID access
+      const id = (row.original).id
 
       return (
-        <div className="block w-[120px] whitespace-normal break-words" title={name}>
-          {name || '—'}
+        <div className="flex items-start justify-between gap-2 w-full overflow-hidden">
+          <div className="flex-1 whitespace-normal break-words min-w-0">
+            {insta ? (
+              <a
+                href={insta}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline block"
+                title={name}
+              >
+                {name || '—'}
+              </a>
+            ) : (
+              <span title={name} className="block">{name || '—'}</span>
+            )}
+          </div>
+          {/* Prevent the flag from shrinking */}
+          {id && (
+            <div className="flex-shrink-0">
+              <ReportIssueModal roomName={name} roomId={id} />
+            </div>
+          )}
         </div>
       );
     },
   },
   {
+    size: 90,
     accessorKey: 'Type',
     header: ({ column }) => {
       return (
@@ -67,7 +76,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
         </Button>
       );
     },
-    size: 60,
     cell: ({ row }) => {
       const type = row.getValue('Type') as string;
       return <TypeBadge type={type} />;
@@ -85,7 +93,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   },
   {
     accessorKey: 'Day',
-    size: 70,
+    size: 80,
     header: ({ column }) => {
       return (
         <Button
@@ -127,7 +135,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
             {date.toLocaleTimeString([], {
               hour: 'numeric',
               minute: '2-digit',
-              hour12: true, // Forces "7:00 pm"
+              hour12: true,
             }).toLowerCase()}
           </span>
         );
@@ -136,6 +144,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
     },
   },
   {
+    size: 90,
     accessorKey: 'Frequency',
     header: ({ column }) => {
       return (
@@ -148,7 +157,6 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
         </Button>
       );
     },
-    size: 80,
     cell: ({ row }) => {
       const frequency = row.getValue('Frequency') as string;
       return frequency?.replace(/^\d+\.\s*/, '') || '—';
@@ -167,7 +175,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   {
     accessorKey: 'Neighbourhood',
     header: 'Location',
-    size: 100,
+    size: 120,
     cell: ({ row }) => {
       // @ts-ignore
       const venueName = row.original.VenueName;
@@ -177,8 +185,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       const addressLink = row.original.Address;
 
       return (
-        // Added max-w-[140px] to match the column size and force wrapping
-        <div className="flex flex-col gap-1 max-w-[100px]">
+        <div className="flex flex-col gap-1 ">
           <span className="font-medium text-foreground leading-tight whitespace-normal break-words">
             {displayName}
           </span>
@@ -209,7 +216,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       const price = row.original['Ticket Price'];
       const runners = row.original['Room Runner (Insta)'];
       return (
-        <div className="flex flex-col gap-1 w-[120px]">
+        <div className="flex flex-col gap-1 w-full">
           <span className="font-medium break-words">🎟️ {price || '—'}</span>
           {runners && runners.length > 0 && (
             <div className="text-xs text-muted-foreground flex flex-col overflow-hidden">
@@ -239,6 +246,8 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
   {
     accessorKey: 'Info',
     header: 'Info',
+    size: 400,
+    minSize: 300,
     cell: ({ row }) => {
       const infoData = row.getValue('Info') as ComedyEvent['Info'] | undefined;
 
@@ -247,7 +256,7 @@ export const Columns: ColumnDef<ComedyEvent>[] = [
       }
 
       return (
-        <div className="whitespace-normal break-words prose prose-sm dark:prose-invert max-w-none">
+        <div className="whitespace-normal break-words prose prose-sm dark:prose-invert max-w-none prose-p:my-0 text-sm">
           <RichText data={infoData} />
         </div>
       );
