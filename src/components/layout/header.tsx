@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { ThemeToggle } from '../theme/theme-toggle';
+import { SubmitRoomModal } from '../SubmitRoomModal';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,6 +13,7 @@ export function Header() {
   return (
     <header className="w-full border-b bg-background">
       <div className="container flex h-16 items-center px-4">
+        {/* Left: Navigation Links */}
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -29,11 +31,14 @@ export function Header() {
                 <Link to="/melbourne/map">Map</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <ThemeToggle />
-            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+
+        {/* Right: Actions (Pushed to the end) */}
+        <div className="ml-auto flex items-center gap-2">
+          <SubmitRoomModal />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

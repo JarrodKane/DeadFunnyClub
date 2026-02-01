@@ -12,7 +12,7 @@ import { ThemeProvider } from './components/theme/theme-provider';
 import { fetchComedy } from './data/fetchComedy';
 import { City } from './routes/city';
 import { Home } from './routes/home';
-import { MapPage } from './routes/map'; // Import the updated component
+import { MapPage } from './routes/map';
 
 const queryClient = new QueryClient();
 

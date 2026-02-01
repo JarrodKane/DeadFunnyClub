@@ -4,8 +4,8 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Clock, MapPin } from 'lucide-react';
 import { type ComedyEvent } from '../../types';
 import { DayBadge } from '../badges/day-badge';
+import { ReportIssueModal } from '../ReportIssueModal';
 import { Button } from '../ui/button';
-import { ReportIssueModal } from '../ReportIssueModal'
 
 export const Columns: ColumnDef<ComedyEvent>[] = [
   {
